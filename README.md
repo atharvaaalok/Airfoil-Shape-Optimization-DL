@@ -4,7 +4,7 @@
 - [ ] Prepare Data
   - [x] Get airfoil data files.
   - [x] Import data into a numpy array and plot airfoils using matplotlib. Check coordinate ordering.
-  - [ ] Generate new airfoil from a given airfoil using random noise.
+  - [x] Generate new airfoil from a given airfoil using random noise.
   - [ ] Work on high, medium and low variance airfoil generation. Prepare directory structure.
   - [ ] Work on getting Xfoil working.
   - [ ] Prepare the data generation pipeline.
