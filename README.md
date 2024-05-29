@@ -34,3 +34,8 @@
 - [ ] Decide where to store the data.
 - [ ] Train the neural network.
 - [ ] Run the two optimization processes.
+
+
+
+## References
+- [For airfoil database](https://github.com/npuljc/Airfoil_preprocessing?tab=readme-ov-file)
