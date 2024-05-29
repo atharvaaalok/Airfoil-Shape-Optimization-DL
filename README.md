@@ -2,8 +2,8 @@
 
 ### Initial Plan
 - [ ] Prepare Data
-  - [ ] Get airfoil data files.
-  - [ ] Import data into a numpy array and plot airfoils using matplotlib. Check coordinate ordering.
+  - [x] Get airfoil data files.
+  - [x] Import data into a numpy array and plot airfoils using matplotlib. Check coordinate ordering.
   - [ ] Generate new airfoil from a given airfoil using random noise.
   - [ ] Work on high, medium and low variance airfoil generation. Prepare directory structure.
   - [ ] Work on getting Xfoil working.
