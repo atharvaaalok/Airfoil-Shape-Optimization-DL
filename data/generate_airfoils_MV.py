@@ -1,6 +1,7 @@
 import numpy as np
 
 from airfoil_noise_addition import airfoil_noise_addition
+from compute_L_by_D import compute_L_by_D
 
 
 def generate_airfoils_MV(total_MV: int, noise_MV: float) -> None:
@@ -18,6 +19,9 @@ def generate_airfoils_MV(total_MV: int, noise_MV: float) -> None:
     # Create dummy array to hold MV airfoils
     X_MV_all = np.zeros((total_airfoils, total_HV, total_MV, num_coordinates))
 
+    # Create dummy array to hold L by D ratios
+    L_by_D_all = np.zeros((total_airfoils, total_HV, total_MV))
+
 
     # Generate mid variance airfoils for each high variance airfoil
     for i in range(total_airfoils):
@@ -29,6 +33,11 @@ def generate_airfoils_MV(total_MV: int, noise_MV: float) -> None:
                 # Store the airfoil in the list of MV airfoils
                 X_MV_all[i, j, k, :] = X_new
 
+                # Compute L by D ratio of the airfoil
+                L_by_D = compute_L_by_D(X_new)
+                L_by_D_all[i, j, k] = L_by_D
 
-    # Save the mid variance airfoils created in a single numpy file
+
+    # Save the mid variance airfoils and their L by D ratios to file
     np.save('generated_airfoils/airfoils_MV.npy', X_MV_all)
+    np.save('generated_airfoils/L_by_D_MV.npy', L_by_D_all)
