@@ -7,9 +7,9 @@
   - [x] Generate new airfoil from a given airfoil using random noise.
   - [x] Work on high, medium and low variance airfoil generation. Prepare directory structure.
   - [x] Work on getting Xfoil working.
-  - [ ] Prepare the data generation pipeline.
+  - [x] Prepare the data generation pipeline.
   - [ ] Use Xfoil to generate only valid airfoils.
-  - [ ] Find and save the L/D ratio for generated airfoils.
+  - [x] Find and save the L/D ratio for generated airfoils.
   - [ ] Generate H, M, L variance airfoils. Look at plots to decide on noise levels.
   - [ ] Estimate time to generate a H, M, L data point on average.
   - [ ] See if data can be generated through multi-processing in parallel.
