@@ -1,5 +1,7 @@
 import numpy as np
 
+from compute_L_by_D import compute_L_by_D
+
 
 def generate_airfoils_singlefile() -> None:
     """Combines all the airfoil coordinates into a single array with each row as one airfoil."""
@@ -19,6 +21,9 @@ def generate_airfoils_singlefile() -> None:
     # Create dummy array to hold airfoils in the first dimension
     # Each row will be x1, y1, x2, y2...xn, yn for the ith airfoil in the airfoil_names.txt file
     X_all = np.zeros((total_airfoils, pts_on_airfoil * 2))
+
+    # Create dummy array to hold airfoil L by D ratios
+    L_by_D_all = np.zeros(total_airfoils)
     
 
     # For each airfoil in the names file open its coordinate file and store data in X_all
@@ -34,6 +39,11 @@ def generate_airfoils_singlefile() -> None:
             # Store the coordinates in the X_all array
             X_all[i, :] = X_flat
 
+            # Compute L by D ratio of the airfoil
+            L_by_D = compute_L_by_D(X_flat)
+            L_by_D_all[i] = L_by_D
 
-    # Save the array in file
+
+    # Save the airfoils and their L by D ratios to file
     np.save('generated_airfoils/airfoils_original.npy', X_all)
+    np.save('generated_airfoils/L_by_D_original.npy', L_by_D_all)

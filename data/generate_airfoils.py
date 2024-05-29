@@ -12,14 +12,14 @@ total_MV, noise_MV = 2, 0.01
 total_LV, noise_LV = 2, 0.001
 
 
-# Generate a single file of all original airfoils
+# Generate a single file of all original airfoils and corresponding L by D ratios
 generate_airfoils_singlefile()
 
-# Generate high variance airfoils for each original airfoil and save in a single file
+# Generate high variance airfoils for each original airfoil and their L by D ratios
 generate_airfoils_HV(total_HV, noise_HV)
 
-# Generate mid variance airfoils for each high variance airfoil and save in a single file
+# Generate mid variance airfoils for each high variance airfoil and their L by D ratios
 generate_airfoils_MV(total_MV, noise_MV)
 
-# Generate low variance airfoils for each mid variance airfoil and save in a single file
+# Generate low variance airfoils for each mid variance airfoil and their L by D ratios
 generate_airfoils_LV(total_LV, noise_LV)
