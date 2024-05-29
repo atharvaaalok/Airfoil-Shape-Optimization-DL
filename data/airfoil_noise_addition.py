@@ -2,7 +2,7 @@ import numpy as np
 import numpy.typing as npt
 
 
-def airfoil_noise_addition(X: npt.NDArray, noise_level: float):
+def airfoil_noise_addition(X: npt.NDArray, noise_level: float) -> npt.NDArray:
     """This function takes an airfoil and creates a new airfoil by adding noise to it.
 
     The noise is added to each coordinate and the amount of noise added is relative to the value of
