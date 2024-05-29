@@ -18,7 +18,7 @@
   - [ ] TE and LE at (1, 0) and (0, 0) and setting angle of attack of generated airfoils to 0.
 - [ ] Work on neural network training pipeline.
   - [ ] Get data from dataset using Dataset and Dataloader in pytorch.
-  - [ ] Define Neural Network class.
+  - [x] Define Neural Network class.
   - [ ] Define the hyperparameters.
   - [ ] Complete the training loop.
   - [ ] Work on checkpoints saving.
