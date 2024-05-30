@@ -11,6 +11,8 @@ X_all = np.load('../data/generated_airfoils/airfoils_original.npy')
 Y_all = np.load('../data/generated_airfoils/L_by_D_original.npy').reshape(-1, 1)
 X_train = torch.from_numpy(X_all).to(torch.float32)
 Y_train = torch.from_numpy(Y_all).to(torch.float32)
+X_val = X_train
+Y_val = Y_train
 
 
 ## Initialize the network
@@ -39,6 +41,9 @@ set_learning_rate(optimizer, learning_rate)
 
 # Run the training loop
 for epoch in range(1, epochs + 1):
+    # Set network to training mode
+    xfoil_net.train()
+
     # Run the forward pass and calculate the predictions
     Y_pred = xfoil_net(X_train)
 
@@ -55,4 +60,12 @@ for epoch in range(1, epochs + 1):
     # Print training progress
     if epoch % print_cost_every == 0 or epoch == 1:
         J_train = loss.item()
-        print_net_performance(epochs = epochs, epoch = epoch, J_train = J_train)
+
+        #  Evaluate current model on validation data
+        xfoil_net.eval()
+        Y_pred = xfoil_net(X_val)
+        loss = MSELoss_fn(Y_pred, Y_val)
+        J_val = loss.item()
+
+        # Print the current performance
+        print_net_performance(epochs = epochs, epoch = epoch, J_train = J_train, J_val = J_val)
