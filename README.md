@@ -22,9 +22,9 @@
   - [x] Define the hyperparameters.
   - [x] Complete the training loop.
   - [x] Work on checkpoints saving.
-- [ ] Work on input optimization given the neural network.
-  - [ ] Fix L/D
-  - [ ] Change Loss function.
+- [x] Work on input optimization given the neural network.
+  - [x] Fix L/D
+  - [x] Change Loss function.
 - [ ] Work on getting the entire neural network pipeline working.
 
 ### Move to Google Cloud Platform
