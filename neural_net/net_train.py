@@ -1,3 +1,5 @@
+import os.path
+
 import torch
 from torch import nn
 import numpy as np
@@ -38,9 +40,18 @@ learning_rate = 1e-6
 # Set learning rate
 set_learning_rate(optimizer, learning_rate)
 
+# Load saved model if available
+if os.path.exists('checkpoints/latest.pth'):
+    checkpoint = torch.load('checkpoints/latest.pth')
+    xfoil_net.load_state_dict(checkpoint['model'])
+    optimizer.load_state_dict(checkpoint['optimizer'])
+    total_epochs = checkpoint['total_epochs']
+else:
+    total_epochs = 0
+
 
 # Run the training loop
-for epoch in range(1, epochs + 1):
+for epoch in range(total_epochs + 1, total_epochs + epochs + 1):
     # Set network to training mode
     xfoil_net.train()
 
@@ -58,7 +69,7 @@ for epoch in range(1, epochs + 1):
     optimizer.zero_grad()
 
     # Print training progress
-    if epoch % print_cost_every == 0 or epoch == 1:
+    if epoch % print_cost_every == 0 or epoch == total_epochs + 1:
         J_train = loss.item()
 
         #  Evaluate current model on validation data
@@ -68,11 +79,14 @@ for epoch in range(1, epochs + 1):
         J_val = loss.item()
 
         # Print the current performance
-        print_net_performance(epochs = epochs, epoch = epoch, J_train = J_train, J_val = J_val)
+        print_net_performance(epochs = total_epochs + epochs, epoch = epoch, J_train = J_train, J_val = J_val)
 
         # Create checkpoint and save the model
         checkpoint = {
+            'total_epochs': epoch,
             'model': xfoil_net.state_dict(),
             'optimizer': optimizer.state_dict(),
         }
-        torch.save(checkpoint, f'checkpoints/xfoil_net_{epoch}.pth')
+        # Save the model twice: once on its own and once in the latest model file
+        torch.save(checkpoint, f'checkpoints/xfoil_net_{epoch}_Jtrain_{J_train:.2e}_Jval_{J_val:.2e}.pth')
+        torch.save(checkpoint, f'checkpoints/latest.pth')
