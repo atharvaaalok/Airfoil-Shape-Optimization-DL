@@ -53,8 +53,8 @@ learning_rate = 0.01
 set_learning_rate(optimizer, learning_rate)
 
 # Load saved model if available
-if os.path.exists('checkpoints/latest.pth'):
-    checkpoint = torch.load('checkpoints/latest.pth')
+if os.path.exists('checkpoints/latest_statedict.pth'):
+    checkpoint = torch.load('checkpoints/latest_statedict.pth')
     xfoil_net.load_state_dict(checkpoint['model'])
     optimizer.load_state_dict(checkpoint['optimizer'])
     total_epochs = checkpoint['total_epochs']
@@ -106,4 +106,6 @@ for epoch in range(total_epochs + 1, total_epochs + epochs + 1):
         }
         # Save the model twice: once on its own and once in the latest model file
         torch.save(checkpoint, f'checkpoints/xfoil_net_{epoch}_Jtrain_{J_train:.2e}_Jval_{J_val:.2e}.pth')
-        torch.save(checkpoint, f'checkpoints/latest.pth')
+        torch.save(checkpoint, f'checkpoints/latest_statedict.pth')
+        # Also save the complete model so that we don't have to instantiate net during input optimization
+        torch.save(xfoil_net, 'checkpoints/latest_model.pth')
