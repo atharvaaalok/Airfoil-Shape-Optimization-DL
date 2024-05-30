@@ -19,9 +19,9 @@
 - [ ] Work on neural network training pipeline.
   - [ ] Get data from dataset using Dataset and Dataloader in pytorch.
   - [x] Define Neural Network class.
-  - [ ] Define the hyperparameters.
-  - [ ] Complete the training loop.
-  - [ ] Work on checkpoints saving.
+  - [x] Define the hyperparameters.
+  - [x] Complete the training loop.
+  - [x] Work on checkpoints saving.
 - [ ] Work on input optimization given the neural network.
   - [ ] Fix L/D
   - [ ] Change Loss function.
