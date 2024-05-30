@@ -2,3 +2,6 @@
 
 # Ignore numpy data files
 *.npy
+
+# Ignore pytorch model files
+*.pth

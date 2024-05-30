@@ -69,3 +69,10 @@ for epoch in range(1, epochs + 1):
 
         # Print the current performance
         print_net_performance(epochs = epochs, epoch = epoch, J_train = J_train, J_val = J_val)
+
+        # Create checkpoint and save the model
+        checkpoint = {
+            'model': xfoil_net.state_dict(),
+            'optimizer': optimizer.state_dict(),
+        }
+        torch.save(checkpoint, f'checkpoints/xfoil_net_{epoch}.pth')
