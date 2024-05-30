@@ -3,6 +3,7 @@ from torch import nn
 import numpy as np
 
 from net_def import NeuralNetwork
+from utils import set_learning_rate, print_net_performance
 
 
 ## Get the data
@@ -22,8 +23,7 @@ xfoil_net = NeuralNetwork(input_dim, hidden_dim)
 MSELoss_fn = nn.MSELoss()
 
 ## Define an optimizer
-learning_rate = 0.01
-optimizer = torch.optim.Adam(xfoil_net.parameters(), lr = learning_rate)
+optimizer = torch.optim.Adam(xfoil_net.parameters())
 
 
 ## Train the network
@@ -31,8 +31,13 @@ optimizer = torch.optim.Adam(xfoil_net.parameters(), lr = learning_rate)
 epochs = 1000
 print_cost_every = 100
 B = 64
+learning_rate = 1e-6
+
+# Set learning rate
+set_learning_rate(optimizer, learning_rate)
 
 
+# Run the training loop
 for epoch in range(1, epochs + 1):
     # Run the forward pass and calculate the predictions
     Y_pred = xfoil_net(X_train)
@@ -50,4 +55,4 @@ for epoch in range(1, epochs + 1):
     # Print training progress
     if epoch % print_cost_every == 0 or epoch == 1:
         J_train = loss.item()
-        print(J_train)
+        print_net_performance(epochs = epochs, epoch = epoch, J_train = J_train)
