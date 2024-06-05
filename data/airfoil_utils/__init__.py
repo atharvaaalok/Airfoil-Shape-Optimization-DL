@@ -1,2 +1,3 @@
 from .generate_airfoil_singlefile import generate_airfoil_singlefile
+from .generate_airfoil_parameterization import generate_airfoil_parameterization
 from .generate_airfoil_variants import generate_airfoil_variants

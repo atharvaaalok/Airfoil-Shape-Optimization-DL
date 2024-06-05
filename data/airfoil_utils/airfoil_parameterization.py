@@ -11,24 +11,23 @@ def fit_catmullrom(X, num_control_pts: int):
     P = X[idx, :]
 
     # Make a list of the control points and set requires grad to True except first and last
-    P_list = [P[i, :] for i in range(num_control_pts)]
-    for i in range(1, num_control_pts - 1):
-        P_list[i].requires_grad = True
-    
+    CP = P[1: num_control_pts - 1, :]
+    CP.requires_grad = True
 
     # Set number of sample points to use for curve fitting
     num_sample_pts = 501
 
     # Setup the optimization problem
     learning_rate = 1e-3
-    optimizer = torch.optim.Adam(P_list[1: -1], lr = learning_rate)
+    optimizer = torch.optim.Adam([CP], lr = learning_rate)
     loss_fn = curve_fit_loss
 
     # Training
     epochs = 100
     for epoch in range(1, epochs + 1):
         # Get the spline sample points
-        X_fit = get_catmullrom_points(P_list, num_sample_pts)
+        P_tensor = torch.vstack([P[0, :], CP, P[-1, :]])
+        X_fit = get_catmullrom_points(P_tensor, num_sample_pts)
 
         # Calculate the loss
         loss = loss_fn(X_fit, X)
@@ -39,25 +38,21 @@ def fit_catmullrom(X, num_control_pts: int):
         # Optimize
         optimizer.step()
         optimizer.zero_grad()
-    
+        
 
     # Return the control points
-    P_list = [P.detach() for P in P_list]
-    P_tensor = torch.stack(P_list)
-
-    return P_tensor
+    return P_tensor.detach()
 
 
 
-def get_catmullrom_points(P_list, num_sample_pts):
-    num_control_pts = len(P_list)
+def get_catmullrom_points(P_tensor, num_sample_pts):
+    num_control_pts = P_tensor.shape[0]
 
     # Sample equally spaced points on the spline
     num_curves = num_control_pts - 1
     t = torch.linspace(0, num_control_pts - 1, num_sample_pts)
 
     # Add ghost points to make the spline pass through first and last point
-    P_tensor = torch.stack(P_list)
     G0 = P_tensor[0] + (P_tensor[0] - P_tensor[1])
     G1 = P_tensor[-1] + (P_tensor[-1] - P_tensor[-2])
     P_extended = torch.vstack([G0, P_tensor, G1])
