@@ -1,0 +1,1 @@
+Dummy file to retain this directory in git in the event that there are no other data files in it.
