@@ -1,13 +1,12 @@
 import numpy as np
 
 from airfoil_utils import generate_airfoils_singlefile
-from airfoil_utils import generate_airfoils_LV
-
+from airfoil_utils import generate_airfoil_variants
 
 # Set the number of HV, MV and LV airfoils and the noise levels used to generate them
-total_HV, noise_HV = 2, 0.1
-total_MV, noise_MV = 2, 0.01
-total_LV, noise_LV = 2, 0.001
+HV_details = {'name': 'HV', 'count': 2, 'noise': 0.1}
+MV_details = {'name': 'MV', 'count': 2, 'noise': 0.01}
+LV_details = {'name': 'LV', 'count': 2, 'noise': 0.001}
 
 
 ## 1
@@ -18,4 +17,4 @@ generate_airfoils_singlefile(airfoil_set)
 ## 2
 # Generate low variance airfoils from the original airfoils
 airfoil_source = 'original'
-generate_airfoils_LV(airfoil_set, airfoil_source, total_LV, noise_LV)
+generate_airfoil_variants(airfoil_set, airfoil_source, LV_details)

@@ -4,13 +4,19 @@ from .airfoil_noise_addition import airfoil_noise_addition
 from .compute_L_by_D import compute_L_by_D
 
 
-def generate_airfoils_LV(airfoil_set: str, airfoil_source: str, total_LV: int, noise_LV: float) -> None:
-    """Creates mid variance airfoils for each high variance airfoil previously generated.
+def generate_airfoil_variants(airfoil_set: str, airfoil_source: str, variance_details: dict) -> None:
+    """Creates new airfoils from previously generated airfoils by adding specified variance.
     
     Args:
-        total_LV: The number of low variance airfoils to be created for each mid variance airfoil.
-        noise_LV: Noise level used to create low variance airfoils from the mid variance ones.
+        airfoil_set: The airfoil data set ('train' etc.) for which the variants will be created.
+        airfoil_source: The airfoil data file from which new variants are to be generated.
+        variance_details: A dictionary containing the name, count and noise level of the variance to
+            be added.
     """
+
+    var_name = variance_details['name']
+    var_count = variance_details['count']
+    var_noise = variance_details['noise']
 
     # Load the airfoils from source
     airfoil_source_filename = f'generated_airfoils/{airfoil_set}/{airfoil_source}'
@@ -21,7 +27,7 @@ def generate_airfoils_LV(airfoil_set: str, airfoil_source: str, total_LV: int, n
     num_coordinates = X.shape[1]
 
     # Create dummy array to hold LV airfoils
-    total_LV_airfoils = total_airfoils * total_LV
+    total_LV_airfoils = total_airfoils * var_count
     X_all = np.zeros((total_LV_airfoils, num_coordinates))
 
     # Create dummy array to hold L by D ratios
@@ -32,10 +38,10 @@ def generate_airfoils_LV(airfoil_set: str, airfoil_source: str, total_LV: int, n
     for i in range(total_airfoils):
         X_i = X[i, :]
         # Generate LV airfoils
-        for j in range(total_LV):
-            X_new = airfoil_noise_addition(X_i, noise_LV)
+        for j in range(var_count):
+            X_new = airfoil_noise_addition(X_i, var_noise)
             # Store the airfoil in the X_all array
-            idx = i * total_LV + j
+            idx = i * var_count + j
             X_all[idx, :] = X_new
 
             # Compute L by D ratio of the airfoil
@@ -44,5 +50,5 @@ def generate_airfoils_LV(airfoil_set: str, airfoil_source: str, total_LV: int, n
     
 
     # Save the airfoils and their L by D ratios to file
-    save_filename = airfoil_source_filename + '_LV'
+    save_filename = airfoil_source_filename + f'_{var_name}'
     np.savez(save_filename, X = X_all, L_by_D = L_by_D_all)
