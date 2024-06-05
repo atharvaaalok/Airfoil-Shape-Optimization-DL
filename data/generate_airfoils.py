@@ -1,6 +1,7 @@
 import numpy as np
 
 from airfoil_utils import generate_airfoil_singlefile
+from airfoil_utils import generate_airfoil_parameterization
 from airfoil_utils import generate_airfoil_variants
 
 
@@ -9,11 +10,17 @@ HV_details = {'name': 'HV', 'count': 2, 'noise': 0.1}
 MV_details = {'name': 'MV', 'count': 2, 'noise': 0.01}
 LV_details = {'name': 'LV', 'count': 2, 'noise': 0.001}
 
+# Set parameterization details
+num_control_pts = 12
+num_sample_pts = 501
+
 
 airfoil_set = 'train'
 ## 1 - original
 # Generate a single file of all original airfoils and corresponding L by D ratios
 generate_airfoil_singlefile(airfoil_set)
+# Generate corresponding parameterized representation file
+generate_airfoil_parameterization(airfoil_set, num_control_pts, num_sample_pts)
 
 ## 2 - original_LV
 # Generate low variance airfoils from the original airfoils

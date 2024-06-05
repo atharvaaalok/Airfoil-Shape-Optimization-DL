@@ -34,8 +34,7 @@ def generate_airfoil_parameterization(airfoil_set, num_control_pts, num_sample_p
         X_all[i, :] = P_tensor.numpy().flatten()
 
         # Compute the L by D ratio of the airfoil
-        P_list = [P_tensor[i] for i in range(P_tensor.shape[0])]
-        X_fit = get_catmullrom_points(P_list, num_sample_pts)
+        X_fit = get_catmullrom_points(P_tensor, num_sample_pts)
         L_by_D = compute_L_by_D(X_fit.flatten())
         L_by_D_all[i] = L_by_D
     
