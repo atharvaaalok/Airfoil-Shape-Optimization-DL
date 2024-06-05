@@ -3,7 +3,7 @@ import numpy as np
 from .compute_L_by_D import compute_L_by_D
 
 
-def generate_airfoils_singlefile(airfoil_set: str) -> None:
+def generate_airfoil_singlefile(airfoil_set: str) -> None:
     """Combines all the airfoil coordinates into a single array with each row as one airfoil.
     
     Args:
