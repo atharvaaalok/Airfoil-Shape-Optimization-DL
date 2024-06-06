@@ -18,7 +18,7 @@ start_time = time.perf_counter()
 
 
 L_by_D = np.zeros(len(airfoil_names))
-for i in range(400):
+for i in range(len(airfoil_names)):
     print(i)
     X = X_list[i]
     L_by_D[i] = compute_L_by_D(X)
