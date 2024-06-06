@@ -12,7 +12,7 @@ LV_details = {'name': 'LV', 'count': 2, 'noise': 0.001}
 
 # Set parameterization details
 num_control_pts = 12
-num_sample_pts = 501
+num_sample_pts = 201
 
 
 airfoil_set = 'train'
@@ -21,6 +21,8 @@ airfoil_set = 'train'
 generate_airfoil_singlefile(airfoil_set)
 # Generate corresponding parameterized representation file
 generate_airfoil_parameterization(airfoil_set, num_control_pts, num_sample_pts)
+
+exit()
 
 ## 2 - original_LV
 # Generate low variance airfoils from the original airfoils

@@ -4,6 +4,10 @@ from xfoil import XFoil
 from xfoil.model import Airfoil
 
 
+# Create global instance of XFoil class - each instance creates a temporary copy of the fortran code
+# therefore creating a new instance in each run is extremely expensive.
+xf = XFoil()
+
 def compute_L_by_D(X: npt.NDArray) -> float:
     """Given an airfoil's coordinates compute the L by D ratio.
 
@@ -20,7 +24,7 @@ def compute_L_by_D(X: npt.NDArray) -> float:
 
 
     # Instantiate the XFoil class
-    xf = XFoil()
+    # xf = XFoil()
     xf.print = False
 
     # Set the airfoil and flow properties

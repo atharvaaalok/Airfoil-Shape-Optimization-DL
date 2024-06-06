@@ -24,10 +24,10 @@ X_fit = get_catmullrom_points(P_tensor.reshape(-1, 2), num_sample_pts)
 plt.plot(X_orig[:, 0], X_orig[:, 1])
 plt.plot(X_fit[:, 0], X_fit[:, 1])
 plt.axis('equal')
-plt.show()
+plt.savefig('orig_vs_fit.svg', format = 'svg')
 
 L_by_D_orig = data_orig['L_by_D']
 L_by_D_fit = data_fit['L_by_D']
 
-np.savetxt('L_by_D_orig', L_by_D_orig)
-np.savetxt('L_by_D_fit', L_by_D_fit)
+np.savetxt('L_by_D_orig_16_401', L_by_D_orig)
+np.savetxt('L_by_D_fit_16_401', L_by_D_fit)

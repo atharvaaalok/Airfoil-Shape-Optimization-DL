@@ -47,6 +47,7 @@ def generate_airfoil_singlefile(airfoil_set: str) -> None:
             # Compute L by D ratio of the airfoil
             L_by_D = compute_L_by_D(X_flat)
             L_by_D_all[i] = L_by_D
+            print('single', i)
     
 
     # Save the airfoils and their L by D ratios to file
