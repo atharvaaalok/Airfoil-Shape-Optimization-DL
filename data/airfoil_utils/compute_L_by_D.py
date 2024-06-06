@@ -26,7 +26,7 @@ def compute_L_by_D(X: npt.NDArray) -> float:
     # Set the airfoil and flow properties
     xf.airfoil = airfoil
     xf.Re = 1e6
-    xf.max_iter = 200
+    xf.max_iter = 100
     # xf.repanel(n_nodes = 250, cte_ratio = 1)
 
     # Calculate aerodynamic coefficients at 0 angle of attack
