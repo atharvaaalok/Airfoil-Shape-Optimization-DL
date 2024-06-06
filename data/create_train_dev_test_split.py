@@ -9,9 +9,9 @@ with open('airfoil_database/airfoil_names.txt', 'r') as f:
 
 all_airfoils_set = set(airfoil_names)
 
-# Select the dev-test samples 432 in total out of a total of 1432 airfoils
-total_dev_samples = 200
-total_test_samples = 200
+# Select the dev-test samples 346 in total out of a total of 1246 airfoils
+total_dev_samples = 173
+total_test_samples = 173
 total_dev_test_samples = total_dev_samples + total_test_samples
 # Get dev test combined samples
 dev_test_set = set(random.sample(list(all_airfoils_set), total_dev_test_samples))
