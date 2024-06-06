@@ -1,6 +1,7 @@
 import numpy as np
 
 from .compute_L_by_D import compute_L_by_D
+from .progress_bar import print_progress_bar
 
 
 def generate_airfoil_singlefile(airfoil_set: str) -> None:
@@ -47,6 +48,9 @@ def generate_airfoil_singlefile(airfoil_set: str) -> None:
             # Compute L by D ratio of the airfoil
             L_by_D = compute_L_by_D(X_flat)
             L_by_D_all[i] = L_by_D
+
+            if i % (total_airfoils // 20) == 0 or i == total_airfoils - 1:
+                print_progress_bar(iteration = i, total_iterations = total_airfoils)
     
 
     # Save the airfoils and their L by D ratios to file
