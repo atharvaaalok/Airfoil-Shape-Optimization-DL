@@ -65,5 +65,6 @@ generate_airfoil_variants(airfoil_set, airfoil_source, LV_details, num_sample_pt
 
 finish_time = time.time()
 time_taken = finish_time - start_time
-with open(f'time_taken_{HV_details['noise']}.txt', 'w') as f:
+HV_noise = HV_details['noise']
+with open(f'time_taken_{HV_noise}.txt', 'w') as f:
     f.write(str(time_taken))
