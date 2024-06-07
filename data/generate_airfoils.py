@@ -45,12 +45,17 @@ airfoil_source = 'original_MV'
 print('Generating - 5. original_MV_LV')
 generate_airfoil_variants(airfoil_set, airfoil_source, LV_details, num_sample_pts)
 
-## 6 - original_HV_MV
+## 6 - original_HV_LV
 airfoil_source = 'original_HV'
 print('Generating - 6. original_HV_MV')
+generate_airfoil_variants(airfoil_set, airfoil_source, LV_details, num_sample_pts)
+
+## 6 - original_HV_MV
+airfoil_source = 'original_HV'
+print('Generating - 7. original_HV_MV')
 generate_airfoil_variants(airfoil_set, airfoil_source, MV_details, num_sample_pts)
 
 ## 7 - original_HV_MV_LV
 airfoil_source = 'original_HV_MV'
-print('Generating - 7. original_HV_MV_LV')
+print('Generating - 8. original_HV_MV_LV')
 generate_airfoil_variants(airfoil_set, airfoil_source, LV_details, num_sample_pts)
