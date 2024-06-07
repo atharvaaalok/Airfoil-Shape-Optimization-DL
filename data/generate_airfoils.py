@@ -1,4 +1,5 @@
 import numpy as np
+import time
 
 from airfoil_utils import generate_airfoil_singlefile
 from airfoil_utils import generate_airfoil_parameterization
@@ -14,6 +15,7 @@ LV_details = {'name': 'LV', 'count': 5, 'noise': 0.1}
 num_control_pts = 12
 num_sample_pts = 201
 
+start_time = time.time()
 
 airfoil_set = 'train'
 ## 1 - original
@@ -59,3 +61,9 @@ generate_airfoil_variants(airfoil_set, airfoil_source, MV_details, num_sample_pt
 airfoil_source = 'original_HV_MV'
 print('Generating - 8. original_HV_MV_LV')
 generate_airfoil_variants(airfoil_set, airfoil_source, LV_details, num_sample_pts)
+
+
+finish_time = time.time()
+time_taken = finish_time - start_time
+with open(f'time_taken_{HV_details['noise']}.txt', 'w') as f:
+    f.write(str(time_taken))
