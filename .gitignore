@@ -6,3 +6,6 @@
 
 # Ignore pytorch model files
 *.pth
+
+# Ignore log files
+*.log
