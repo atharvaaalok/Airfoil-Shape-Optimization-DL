@@ -49,7 +49,7 @@ generate_airfoil_variants(airfoil_set, airfoil_source, LV_details, num_sample_pt
 
 ## 6 - original_HV_LV
 airfoil_source = 'original_HV'
-print('Generating - 6. original_HV_MV')
+print('Generating - 6. original_HV_LV')
 generate_airfoil_variants(airfoil_set, airfoil_source, LV_details, num_sample_pts)
 
 ## 6 - original_HV_MV

@@ -1,5 +1,3 @@
-import logging
-
 import numpy as np
 import torch
 
@@ -18,19 +16,6 @@ def generate_airfoil_variants(airfoil_set: str, airfoil_source: str, variance_de
         variance_details: A dictionary containing the name, count and noise level of the variance to
             be added.
     """
-
-    airfoil_source_filename = f'generated_airfoils/{airfoil_set}/{airfoil_source}'
-    var_name = variance_details['name']
-    fname = airfoil_source_filename + f'_{var_name}' + '.log'
-
-    logger = logging.getLogger(fname[:-4] + '_Logger')
-    logger.setLevel(logging.DEBUG)
-    file_handler = logging.FileHandler(fname)
-    file_handler.setLevel(logging.DEBUG)
-    formatter = logging.Formatter('')
-    file_handler.setFormatter(formatter)
-    logger.addHandler(file_handler)
-
 
     var_name = variance_details['name']
     var_count = variance_details['count']
@@ -60,9 +45,7 @@ def generate_airfoil_variants(airfoil_set: str, airfoil_source: str, variance_de
             # Generate new airfoils until one is generated that has a defined L by D ratio
             L_by_D = np.nan
 
-            c = 0
             while np.isnan(L_by_D):
-                c += 1
                 P_new = airfoil_noise_addition(P_i, var_noise)
                 # Position centroid of spline control points at (0, 0)
                 P_new = P_new.reshape(-1, 2)
@@ -76,7 +59,6 @@ def generate_airfoil_variants(airfoil_set: str, airfoil_source: str, variance_de
                 # Compute L by D ratio of the airfoil
                 L_by_D = compute_L_by_D(X_fit.flatten())
             
-            logger.debug(c)
             
             # Store the airfoil in the P_all array
             idx = i * var_count + j
