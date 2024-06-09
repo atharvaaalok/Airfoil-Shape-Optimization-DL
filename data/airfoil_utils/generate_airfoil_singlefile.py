@@ -4,7 +4,7 @@ from .compute_L_by_D import compute_L_by_D
 from .progress_bar import print_progress_bar
 
 
-def generate_airfoil_singlefile(airfoil_set: str) -> None:
+def generate_airfoil_singlefile(airfoil_set: str, dataset_count: int) -> None:
     """Combines all the airfoil coordinates into a single array with each row as one airfoil.
     
     Args:
@@ -54,5 +54,5 @@ def generate_airfoil_singlefile(airfoil_set: str) -> None:
     
 
     # Save the airfoils and their L by D ratios to file
-    save_filename = f'generated_airfoils/{airfoil_set}/original_coordinates'
+    save_filename = f'generated_airfoils/{airfoil_set}/{dataset_count}/original_coordinates'
     np.savez(save_filename, X = X_all, L_by_D = L_by_D_all)

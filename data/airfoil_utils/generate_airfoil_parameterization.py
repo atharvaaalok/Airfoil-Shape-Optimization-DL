@@ -5,9 +5,9 @@ from .compute_L_by_D import compute_L_by_D
 from .progress_bar import print_progress_bar
 
 
-def generate_airfoil_parameterization(airfoil_set, num_control_pts, num_sample_pts):
+def generate_airfoil_parameterization(airfoil_set: str, dataset_count: int, num_control_pts: int, num_sample_pts: int):
     # Load the airfoils
-    data = np.load(f'generated_airfoils/{airfoil_set}/original_coordinates.npz')
+    data = np.load(f'generated_airfoils/{airfoil_set}/{dataset_count}/original_coordinates.npz')
     X_orig = data['X']
 
     total_airfoils = X_orig.shape[0]
@@ -44,5 +44,5 @@ def generate_airfoil_parameterization(airfoil_set, num_control_pts, num_sample_p
     
 
     # Save the airfoils and their L by D ratios to file
-    save_filename = f'generated_airfoils/{airfoil_set}/original'
+    save_filename = f'generated_airfoils/{airfoil_set}/{dataset_count}/original'
     np.savez(save_filename, P = P_all, L_by_D = L_by_D_all)

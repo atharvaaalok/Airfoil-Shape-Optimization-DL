@@ -7,7 +7,7 @@ from .airfoil_parameterization import get_catmullrom_points
 from .progress_bar import print_progress_bar
 
 
-def generate_airfoil_variants(airfoil_set: str, airfoil_source: str, variance_details: dict, num_sample_pts: int) -> None:
+def generate_airfoil_variants(airfoil_set: str, dataset_count: int, airfoil_source: str, variance_details: dict, num_sample_pts: int) -> None:
     """Creates new airfoils from previously generated airfoils by adding specified variance.
     
     Args:
@@ -22,7 +22,7 @@ def generate_airfoil_variants(airfoil_set: str, airfoil_source: str, variance_de
     var_noise = variance_details['noise']
 
     # Load the airfoils from source
-    airfoil_source_filename = f'generated_airfoils/{airfoil_set}/{airfoil_source}'
+    airfoil_source_filename = f'generated_airfoils/{airfoil_set}/{dataset_count}/{airfoil_source}'
     data = np.load(airfoil_source_filename + '.npz')
     P = data['P']
 
