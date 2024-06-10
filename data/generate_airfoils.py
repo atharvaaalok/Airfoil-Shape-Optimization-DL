@@ -1,4 +1,5 @@
 import os
+import shutil
 import multiprocessing
 import time
 
@@ -23,14 +24,14 @@ airfoil_set = 'train'
 dataset_count_list = [i for i in range(1, 11)]
 
 
-def gen_orig_param(airfoil_set, dataset_count):
+def gen_orig_param(airfoil_set):
     ## 1 - original
     # Generate a single file of all original airfoils and corresponding L by D ratios
     print('Generating - 1.1 original_coordinates')
-    generate_airfoil_singlefile(airfoil_set, dataset_count)
+    generate_airfoil_singlefile(airfoil_set)
     # Generate corresponding parameterized representation file
     print('Generating - 1.2 original')
-    generate_airfoil_parameterization(airfoil_set, dataset_count, num_control_pts, num_sample_pts)
+    generate_airfoil_parameterization(airfoil_set, num_control_pts, num_sample_pts)
 
 
 def gen_air(airfoil_set, dataset_count):
@@ -85,11 +86,22 @@ if __name__ == '__main__':
             raise ValueError('Directory already exists. Cannot overwrite data.')
         else:
             os.makedirs(dir_name)
-
+    
 
     # Generate airfoils single file and their parameterizations
+    gen_orig_param(airfoil_set)
+
+    # Copy airfoils single file and their parameterizations to each dataset folder
     for dataset_count in dataset_count_list:
-        gen_orig_param(airfoil_set, dataset_count)
+        # Copy original coordinates file
+        src = f'generated_airfoils/{airfoil_set}/original_coordinates.npz'
+        dst = f'generated_airfoils/{airfoil_set}/{dataset_count}/original_coordinates.npz'
+        shutil.copyfile(src, dst)
+
+        # Copy parameterization file
+        src = f'generated_airfoils/{airfoil_set}/original.npz'
+        dst = f'generated_airfoils/{airfoil_set}/{dataset_count}/original.npz'
+        shutil.copyfile(src, dst)
 
     
     # Create processes for multiprocessing
