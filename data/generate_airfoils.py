@@ -21,7 +21,7 @@ num_sample_pts = 201
 
 # Choose the airfoil data set to generate
 airfoil_set = 'train'
-dataset_count_list = [i for i in range(1, 11)]
+dataset_count_list = [i for i in range(61, 101)]
 
 
 def gen_orig_param(airfoil_set):
