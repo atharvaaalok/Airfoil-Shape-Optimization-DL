@@ -9,34 +9,29 @@ from utils import set_learning_rate, print_net_performance
 
 
 ## Get the data
-# X_all = np.load('../data/generated_airfoils/airfoils_original.npy')
-# Y_all = np.load('../data/generated_airfoils/L_by_D_original.npy').reshape(-1, 1)
-# X_train = torch.from_numpy(X_all).to(torch.float32)
-# Y_train = torch.from_numpy(Y_all).to(torch.float32)
-# X_val = X_train
-# Y_val = Y_train
+train_data = np.load('../data/generated_airfoils/train/airfoil_data.npz')
+X_all = train_data['P']
+Y_all = train_data['L_by_D'].reshape(-1, 1)
+X_train = torch.from_numpy(X_all).to(torch.float32)
+Y_train = torch.from_numpy(Y_all).to(torch.float32)
+val_data = np.load('../data/generated_airfoils/dev/airfoil_data.npz')
+X_all = val_data['P']
+Y_all = val_data['L_by_D'].reshape(-1, 1)
+X_val = torch.from_numpy(X_all).to(torch.float32)
+Y_val = torch.from_numpy(Y_all).to(torch.float32)
 
-def f(X):
-    # For a training example - y = x1 + 2 * x2^2 + 3 * x3^.5, the fancy indexing preserves 2D shape
-    Y = X[:, 0:1] + 2 * X[:, 1:2] ** 2 + 3 * X[:, 2:3] ** 0.5
-    return Y
+m_train = X_train.shape[0]
 
-m_train = 100000
-m_val = 100
-factor = 5
-X_train = torch.rand(m_train, 3) * factor
-Y_train = f(X_train)
-X_val = torch.rand(m_val, 3) * factor
-Y_val = f(X_val)
 
 ## Initialize the network
 # Set network properties
-input_dim, hidden_dim, layer_count = 3, 10, 3
+input_dim, hidden_dim, layer_count = 24, 10, 3
 xfoil_net = NeuralNetwork(input_dim, hidden_dim, layer_count)
 
 
 ## Define the loss function
 MSELoss_fn = nn.MSELoss()
+
 
 ## Define an optimizer
 optimizer = torch.optim.Adam(xfoil_net.parameters())
@@ -44,10 +39,10 @@ optimizer = torch.optim.Adam(xfoil_net.parameters())
 
 ## Train the network
 # Set the training properties
-epochs = 1000
-print_cost_every = 100
+epochs = 100000
+print_cost_every = 10000
 B = 64
-learning_rate = 0.01
+learning_rate = 0.001
 
 # Set learning rate
 set_learning_rate(optimizer, learning_rate)
