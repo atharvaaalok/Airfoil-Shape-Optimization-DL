@@ -57,6 +57,8 @@ def dev_loop(dataloader, model, loss_fn, verbose = False):
     if verbose:
         print(f'{cyan}Valid Loss:{color_end} {test_loss:20.6f}')
         print()
+    
+    return test_loss
 
 
 ## Get the data
@@ -92,28 +94,50 @@ optimizer = torch.optim.Adam(xfoil_net.parameters())
 ## Train the network
 # Set the training properties
 epochs = 1000
+print_cost_every = 100
 learning_rate = 0.001
 
 # Set learning rate
 set_learning_rate(optimizer, learning_rate)
 
+# Load saved model if available
+if os.path.exists('checkpoints/latest.pth'):
+    checkpoint = torch.load('checkpoints/latest.pth')
+    xfoil_net.load_state_dict(checkpoint['model'])
+    optimizer.load_state_dict(checkpoint['optimizer'])
+    total_epochs = checkpoint['total_epochs']
+else:
+    total_epochs = 0
+
 
 # Train the network
-for epoch in range(1, epochs):
-    
-    if epoch % (epochs // 10) == 0 or epoch == 1:
-        verbose = True
-    else:
-        verbose = False
+for epoch in range(total_epochs + 1, total_epochs + epochs + 1):
+
+    verbose = True if epoch % print_cost_every == 0 or epoch == total_epochs + 1 else False
+    save = verbose
 
     if verbose:
         print(f'{red}Epoch {epoch}{color_end}\n' + 40 * '-')
 
+
     # Run the training loop
     train_loop(train_dataloader, xfoil_net, MSELoss_fn, optimizer, verbose)
 
+
     # Run the validation loop
-    dev_loop(dev_dataloader, xfoil_net, MSELoss_fn, verbose)
+    J_val = dev_loop(dev_dataloader, xfoil_net, MSELoss_fn, verbose)
+
+
+    if save:
+        # Create checkpoint and save the model
+        checkpoint = {
+            'total_epochs': epoch,
+            'model': xfoil_net.state_dict(),
+            'optimizer': optimizer.state_dict(),
+        }
+        # Save the model twice: once on its own and once in the latest model file
+        torch.save(checkpoint, f'checkpoints/xfoil_net_Epoch_{epoch}_Jval_{J_val:.3e}.pth')
+        torch.save(checkpoint, f'checkpoints/latest.pth')
 
 
 print('Finished Training!')
