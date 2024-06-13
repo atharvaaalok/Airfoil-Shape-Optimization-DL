@@ -28,7 +28,7 @@
 - [ ] Work on getting the entire neural network pipeline working.
 
 ### Move to Google Cloud Platform
-- [ ] Move code to GCP. Connect to GCP via VSCode and SSH.
+- [x] Move code to GCP. Connect to GCP via VSCode and SSH.
 - [ ] Make sure all code works on GCP.
 - [ ] Generate actual data.
 - [ ] Decide where to store the data.
