@@ -10,7 +10,7 @@ L_by_D_combine_all_dataset = []
 
 
 for dataset_count in dataset_count_list:
-    dir_name = f'generated_airfoils/{airfoil_set}/{dataset_count}'
+    dir_name = f'generated_airfoils/{airfoil_set}/{dataset_count}/'
 
     P_combine = []
     L_by_D_combine = []
