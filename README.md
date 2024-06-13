@@ -1,7 +1,7 @@
 ## Project Plan
 
 ### Initial Plan
-- [ ] Prepare Data
+- [x] Prepare Data
   - [x] Get airfoil data files.
   - [x] Import data into a numpy array and plot airfoils using matplotlib. Check coordinate ordering.
   - [x] Generate new airfoil from a given airfoil using random noise.
