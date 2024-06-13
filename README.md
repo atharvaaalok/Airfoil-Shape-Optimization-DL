@@ -8,7 +8,7 @@
   - [x] Work on high, medium and low variance airfoil generation. Prepare directory structure.
   - [x] Work on getting Xfoil working.
   - [x] Prepare the data generation pipeline.
-  - [ ] Use Xfoil to generate only valid airfoils.
+  - [x] Use Xfoil to generate only valid airfoils.
   - [x] Find and save the L/D ratio for generated airfoils.
   - [ ] Generate H, M, L variance airfoils. Look at plots to decide on noise levels.
   - [ ] Estimate time to generate a H, M, L data point on average.
