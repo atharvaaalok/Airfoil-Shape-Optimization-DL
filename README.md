@@ -11,7 +11,7 @@
   - [x] Use Xfoil to generate only valid airfoils.
   - [x] Find and save the L/D ratio for generated airfoils.
   - [x] Generate H, M, L variance airfoils. Look at plots to decide on noise levels.
-  - [ ] Estimate time to generate a H, M, L data point on average.
+  - [x] Estimate time to generate a H, M, L data point on average.
   - [ ] See if data can be generated through multi-processing in parallel.
   - [ ] Decide H, M, L count depending on time taken and given that I am willing to spend D days on just data generation.
   - [ ] Need for using parametric representation and smooth surface airfoil generation after adding noise.
