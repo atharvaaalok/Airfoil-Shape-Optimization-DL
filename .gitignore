@@ -12,3 +12,6 @@
 
 # Ignore service key file for google cloud storage
 service_key_gcloud.json
+
+# Ignore the downloaded_airfoils directory
+downloaded_airfoils/
