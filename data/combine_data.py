@@ -1,7 +1,7 @@
 import numpy as np
 
 
-dataset_count_list = [i for i in range(1, 11)]
+dataset_count_list = [i for i in range(1, 101)]
 airfoil_set = 'train'
 
 # Initialize lists to hold each dataset's combined data arrays
