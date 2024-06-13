@@ -27,5 +27,5 @@ def upload_folder(bucket_name, source_folder, dataset_subdir_name):
 # Upload folder
 bucket_name = 'airfoil-shape-optimization-dl-data'
 folder_to_upload = 'generated_airfoils'
-dataset_subdir_name = 'HV0.7_MV0.3_LV0.1'
+dataset_subdir_name = 'Originals'
 upload_folder(bucket_name, folder_to_upload, dataset_subdir_name)
