@@ -14,7 +14,7 @@
   - [x] Estimate time to generate a H, M, L data point on average.
   - [x] See if data can be generated through multi-processing in parallel.
   - [x] Decide H, M, L count depending on time taken and given that I am willing to spend D days on just data generation.
-  - [ ] Need for using parametric representation and smooth surface airfoil generation after adding noise.
+  - [x] Need for using parametric representation and smooth surface airfoil generation after adding noise.
   - [ ] TE and LE at (1, 0) and (0, 0) and setting angle of attack of generated airfoils to 0.
 - [ ] Work on neural network training pipeline.
   - [ ] Get data from dataset using Dataset and Dataloader in pytorch.
