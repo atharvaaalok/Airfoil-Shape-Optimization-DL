@@ -2,25 +2,77 @@ import os.path
 
 import torch
 from torch import nn
-import numpy as np
+from torch.utils.data import DataLoader
 
 from net_def import NeuralNetwork
+from net_data import AirfoilDataset
 from utils import set_learning_rate, print_net_performance
+from utils import red, cyan, color_end
+
+
+def train_loop(dataloader, model, loss_fn, optimizer, verbose = False):
+    num_batches = len(dataloader)
+    num_digits = len(str(num_batches))
+
+    # Set the model to training mode
+    model.train()
+
+    # Run the training loop
+    for batch, (X, Y) in enumerate(dataloader):
+        # Run the forward pass
+        Y_pred = model(X)
+
+        # Compute the loss
+        loss = loss_fn(Y_pred, Y)
+
+        # Run the backward pass and calculate the gradients
+        loss.backward()
+
+        # Take an update step and then zero out the gradients
+        optimizer.step()
+        optimizer.zero_grad()
+
+        if verbose:
+            if batch % (num_batches // 5) == 0:
+                loss = loss.item()
+                print(f'{cyan}Train Loss:{color_end} [{batch + 1:{num_digits}}/{num_batches}] {loss:20.6f}')
+    if verbose:
+        print()
+
+
+def dev_loop(dataloader, model, loss_fn, verbose = False):
+    num_batches = len(dataloader)
+    test_loss = 0
+
+    # Set the model to evaluation mode
+    model.eval()
+
+    # Evaluate the model with torch.no_grad() to ensure no gradients are computed
+    with torch.no_grad():
+        for X, Y in dataloader:
+            Y_pred = model(X)
+            test_loss += loss_fn(Y_pred, Y).item()
+    
+    test_loss = test_loss / num_batches
+    if verbose:
+        print(f'{cyan}Valid Loss:{color_end} {test_loss:20.6f}')
+        print()
 
 
 ## Get the data
-train_data = np.load('../data/generated_airfoils/train/airfoil_data.npz')
-X_all = train_data['P']
-Y_all = train_data['L_by_D'].reshape(-1, 1)
-X_train = torch.from_numpy(X_all).to(torch.float32)
-Y_train = torch.from_numpy(Y_all).to(torch.float32)
-val_data = np.load('../data/generated_airfoils/dev/airfoil_data.npz')
-X_all = val_data['P']
-Y_all = val_data['L_by_D'].reshape(-1, 1)
-X_val = torch.from_numpy(X_all).to(torch.float32)
-Y_val = torch.from_numpy(Y_all).to(torch.float32)
+train_filepath = '../data/generated_airfoils/train/airfoil_data.npz'
+dev_filepath = '../data/generated_airfoils/dev/airfoil_data.npz'
 
-m_train = X_train.shape[0]
+# Create data set instances for training and dev data
+train_dataset = AirfoilDataset(train_filepath)
+dev_dataset = AirfoilDataset(dev_filepath)
+
+# Fix the batch size
+B = 64
+
+# Create data loader instances for training and dev sets
+train_dataloader = DataLoader(train_dataset, batch_size = B, shuffle = True)
+dev_dataloader = DataLoader(dev_dataset, batch_size = B, shuffle = True)
 
 
 ## Initialize the network
@@ -39,66 +91,29 @@ optimizer = torch.optim.Adam(xfoil_net.parameters())
 
 ## Train the network
 # Set the training properties
-epochs = 100000
-print_cost_every = 10000
-B = 64
+epochs = 1000
 learning_rate = 0.001
 
 # Set learning rate
 set_learning_rate(optimizer, learning_rate)
 
-# Load saved model if available
-if os.path.exists('checkpoints/latest.pth'):
-    checkpoint = torch.load('checkpoints/latest.pth')
-    xfoil_net.load_state_dict(checkpoint['model'])
-    optimizer.load_state_dict(checkpoint['optimizer'])
-    total_epochs = checkpoint['total_epochs']
-else:
-    total_epochs = 0
+
+# Train the network
+for epoch in range(1, epochs):
+    
+    if epoch % (epochs // 10) == 0 or epoch == 1:
+        verbose = True
+    else:
+        verbose = False
+
+    if verbose:
+        print(f'{red}Epoch {epoch}{color_end}\n' + 40 * '-')
+
+    # Run the training loop
+    train_loop(train_dataloader, xfoil_net, MSELoss_fn, optimizer, verbose)
+
+    # Run the validation loop
+    dev_loop(dev_dataloader, xfoil_net, MSELoss_fn, verbose)
 
 
-# Run the training loop
-for epoch in range(total_epochs + 1, total_epochs + epochs + 1):
-    # Set network to training mode
-    xfoil_net.train()
-
-    # Select a mini-batch of data
-    idx = torch.randint(0, m_train, (B,))
-    x = X_train[idx, :]
-    y = Y_train[idx, :]
-
-    # Run the forward pass and calculate the predictions
-    Y_pred = xfoil_net(x)
-
-    # Compute the loss
-    loss = MSELoss_fn(Y_pred, y)
-
-    # Run the backward pass and calculate the gradients
-    loss.backward()
-
-    # Take an update step and then zero out the gradients
-    optimizer.step()
-    optimizer.zero_grad()
-
-    # Print training progress
-    if epoch % print_cost_every == 0 or epoch == total_epochs + 1:
-        J_train = loss.item()
-
-        #  Evaluate current model on validation data
-        xfoil_net.eval()
-        Y_pred = xfoil_net(X_val)
-        loss = MSELoss_fn(Y_pred, Y_val)
-        J_val = loss.item()
-
-        # Print the current performance
-        print_net_performance(epochs = total_epochs + epochs, epoch = epoch, J_train = J_train, J_val = J_val)
-
-        # Create checkpoint and save the model
-        checkpoint = {
-            'total_epochs': epoch,
-            'model': xfoil_net.state_dict(),
-            'optimizer': optimizer.state_dict(),
-        }
-        # Save the model twice: once on its own and once in the latest model file
-        torch.save(checkpoint, f'checkpoints/xfoil_net_{epoch}_Jtrain_{J_train:.2e}_Jval_{J_val:.2e}.pth')
-        torch.save(checkpoint, f'checkpoints/latest.pth')
+print('Finished Training!')
