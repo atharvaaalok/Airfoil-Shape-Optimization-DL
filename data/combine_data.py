@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 
 
@@ -9,16 +11,24 @@ P_combine_all_dataset = []
 L_by_D_combine_all_dataset = []
 
 
+# 1. original
+data_original = np.load(f'generated_airfoils/{airfoil_set}/original.npz')
+P_orig = data_original['P']
+L_by_D_orig = data_original['L_by_D']
+P_combine_all_dataset.append(P_orig)
+L_by_D_combine_all_dataset.append(L_by_D_orig)
+
+
 for dataset_count in dataset_count_list:
     dir_name = f'generated_airfoils/{airfoil_set}/{dataset_count}/'
 
+    # If directory doesn't exist then exit and only use the original airfoils to create dataset
+    if not os.path.exists(dir_name):
+        print('Exiting after only combining original airfoils.')
+        break
+
     P_combine = []
     L_by_D_combine = []
-
-    # 1. original
-    data = np.load(dir_name + 'original.npz')
-    P_combine.append(data['P'])
-    L_by_D_combine.append(data['L_by_D'])
 
     # 2. original_LV
     data = np.load(dir_name + 'original_LV.npz')
@@ -61,7 +71,7 @@ for dataset_count in dataset_count_list:
     L_by_D_combine = np.hstack(L_by_D_combine)
 
     # Store in a combined data file for each dataset
-    np.savez(dir_name + 'combined_data.npz', P = P_combine, L_by_D = L_by_D_combine)
+    np.savez(dir_name + 'combined_data.npz', P = np.vstack([P_orig, P_combine]), L_by_D = np.hstack([L_by_D_orig, L_by_D_combine]))
     
 
     # Append data to all dataset list
