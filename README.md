@@ -30,7 +30,7 @@
 ### Move to Google Cloud Platform
 - [x] Move code to GCP. Connect to GCP via VSCode and SSH.
 - [x] Make sure all code works on GCP.
-- [ ] Generate actual data.
+- [x] Generate actual data.
 - [ ] Decide where to store the data.
 - [ ] Train the neural network.
 - [ ] Run the two optimization processes.
