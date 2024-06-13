@@ -45,3 +45,54 @@ def print_net_performance(epochs: int, epoch: int, J_train: float, J_val: float 
         print_performance += f'{cyan}Val Cost:{color_end} {J_val:11.6f}'
     
     print(print_performance)
+
+
+def train_loop(dataloader, model, loss_fn, optimizer, verbose = False):
+    num_batches = len(dataloader)
+    num_digits = len(str(num_batches))
+
+    # Set the model to training mode
+    model.train()
+
+    # Run the training loop
+    for batch, (X, Y) in enumerate(dataloader):
+        # Run the forward pass
+        Y_pred = model(X)
+
+        # Compute the loss
+        loss = loss_fn(Y_pred, Y)
+
+        # Run the backward pass and calculate the gradients
+        loss.backward()
+
+        # Take an update step and then zero out the gradients
+        optimizer.step()
+        optimizer.zero_grad()
+
+        if verbose:
+            if batch % (num_batches // 5) == 0:
+                loss = loss.item()
+                print(f'{cyan}Train Loss:{color_end} [{batch + 1:{num_digits}}/{num_batches}] {loss:20.6f}')
+    if verbose:
+        print()
+
+
+def dev_loop(dataloader, model, loss_fn, verbose = False):
+    num_batches = len(dataloader)
+    test_loss = 0
+
+    # Set the model to evaluation mode
+    model.eval()
+
+    # Evaluate the model with torch.no_grad() to ensure no gradients are computed
+    with torch.no_grad():
+        for X, Y in dataloader:
+            Y_pred = model(X)
+            test_loss += loss_fn(Y_pred, Y).item()
+    
+    test_loss = test_loss / num_batches
+    if verbose:
+        print(f'{cyan}Valid Loss:{color_end} {test_loss:20.6f}')
+        print()
+    
+    return test_loss
