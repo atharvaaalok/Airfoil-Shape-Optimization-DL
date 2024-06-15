@@ -7,8 +7,9 @@ class AirfoilDataset(Dataset):
     def __init__(self, file_path):
         # Load the data from the combined data file
         data = np.load(file_path)
-        self.P = data['P']
-        self.L_by_D = data['L_by_D']
+        airfoil_count = 900
+        self.P = data['P'][:airfoil_count, :]
+        self.L_by_D = data['L_by_D'][:airfoil_count]
     
 
     def __len__(self):

@@ -15,10 +15,10 @@ dev_filepath = '../data/generated_airfoils/dev/airfoil_data.npz'
 
 # Create data set instances for training and dev data
 train_dataset = AirfoilDataset(train_filepath)
-dev_dataset = AirfoilDataset(dev_filepath)
+dev_dataset = AirfoilDataset(train_filepath)
 
 # Fix the batch size
-B = 64
+B = 900
 
 # Create data loader instances for training and dev sets
 train_dataloader = DataLoader(train_dataset, batch_size = B, shuffle = True)
@@ -27,7 +27,7 @@ dev_dataloader = DataLoader(dev_dataset, batch_size = B, shuffle = True)
 
 ## Initialize the network
 # Set network properties
-input_dim, hidden_dim, layer_count = 24, 10, 3
+input_dim, hidden_dim, layer_count = 24, 30, 4
 xfoil_net = NeuralNetwork(input_dim, hidden_dim, layer_count)
 
 
@@ -36,27 +36,26 @@ MSELoss_fn = nn.MSELoss()
 
 
 ## Define an optimizer
-optimizer = torch.optim.Adam(xfoil_net.parameters())
+learning_rate = 0.01
+optimizer = torch.optim.Adam(xfoil_net.parameters(), lr = learning_rate)
+# scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, factor = 0.9)
 
 
 ## Train the network
 # Set the training properties
-epochs = 1000
-print_cost_every = 100
-learning_rate = 0.001
+epochs = 100000
+print_cost_every = 10000
 
-# Set learning rate
-set_learning_rate(optimizer, learning_rate)
 
-# Load saved model if available
-if os.path.exists('checkpoints/latest.pth'):
-    checkpoint = torch.load('checkpoints/latest.pth')
-    xfoil_net.load_state_dict(checkpoint['model'])
-    optimizer.load_state_dict(checkpoint['optimizer'])
-    total_epochs = checkpoint['total_epochs']
-else:
-    total_epochs = 0
-
+# # Load saved model if available
+# if os.path.exists('checkpoints/latest.pth'):
+#     checkpoint = torch.load('checkpoints/latest.pth')
+#     xfoil_net.load_state_dict(checkpoint['model'])
+#     optimizer.load_state_dict(checkpoint['optimizer'])
+#     total_epochs = checkpoint['total_epochs']
+# else:
+#     total_epochs = 0
+total_epochs = 0
 
 # Train the network
 for epoch in range(total_epochs + 1, total_epochs + epochs + 1):
@@ -66,14 +65,16 @@ for epoch in range(total_epochs + 1, total_epochs + epochs + 1):
 
     if verbose:
         print(f'{red}Epoch {epoch}{color_end}\n' + 40 * '-')
+        # print(scheduler.get_last_lr())
 
 
     # Run the training loop
-    train_loop(train_dataloader, xfoil_net, MSELoss_fn, optimizer, verbose)
+    train_loop(train_dataloader, xfoil_net, MSELoss_fn, optimizer, verbose = False)
 
 
     # Run the validation loop
     J_val = dev_loop(dev_dataloader, xfoil_net, MSELoss_fn, verbose)
+    # scheduler.step(J_val)
 
 
     if save:
@@ -89,3 +90,10 @@ for epoch in range(total_epochs + 1, total_epochs + epochs + 1):
 
 
 print('Finished Training!')
+
+
+# Evaluate the model
+xfoil_net.eval()
+X, Y = next(iter(train_dataloader))
+Y_pred = xfoil_net(X)
+print(torch.hstack([Y, Y_pred]))
