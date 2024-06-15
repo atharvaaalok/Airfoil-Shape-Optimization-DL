@@ -8,8 +8,8 @@ class AirfoilDataset(Dataset):
         # Load the data from the combined data file
         data = np.load(file_path)
         airfoil_count = 900
-        self.P = data['P'][:airfoil_count, :]
-        self.L_by_D = data['L_by_D'][:airfoil_count]
+        self.P = torch.tensor(data['P'][:airfoil_count, :], dtype = torch.float32)
+        self.L_by_D = torch.tensor(data['L_by_D'][:airfoil_count], dtype = torch.float32).reshape(-1, 1)
     
 
     def __len__(self):
@@ -20,5 +20,4 @@ class AirfoilDataset(Dataset):
         # Return the sample at the given index
         x = self.P[idx]
         y = self.L_by_D[idx]
-        y = y.reshape(1, )
-        return torch.tensor(x, dtype = torch.float32),  torch.tensor(y, dtype = torch.float32)
+        return x, y
