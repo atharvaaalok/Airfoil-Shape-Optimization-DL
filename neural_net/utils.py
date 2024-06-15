@@ -70,9 +70,12 @@ def train_loop(X_train, Y_train, B, model, loss_fn, optimizer, verbose = False):
 
 
     num_digits = len(str(num_batches))
+    train_loss = 0
 
     # Set the model to training mode
     model.train()
+
+    print_cost_every = 1 if num_batches // 5 == 0 else num_batches // 5
 
     # Run the training loop
     for batch in range(num_batches):
@@ -83,6 +86,7 @@ def train_loop(X_train, Y_train, B, model, loss_fn, optimizer, verbose = False):
 
         # Compute the loss
         loss = loss_fn(Y_pred, Y)
+        train_loss += loss.item()
 
         # Run the backward pass and calculate the gradients
         loss.backward()
@@ -92,11 +96,16 @@ def train_loop(X_train, Y_train, B, model, loss_fn, optimizer, verbose = False):
         optimizer.zero_grad()
 
         if verbose:
-            if batch % (num_batches // 5) == 0:
+            if batch % print_cost_every == 0:
                 loss = loss.item()
                 print(f'{cyan}Train Loss:{color_end} [{batch + 1:{num_digits}}/{num_batches}] {loss:20.6f}')
+    
+    train_loss = train_loss / num_batches
     if verbose:
+        print(f'{cyan}Avg. Train Loss:{color_end} {train_loss:20.6f}')
         print()
+    
+    return train_loss
 
 
 def dev_loop(X_val, Y_val, B, model, loss_fn, verbose = False):
