@@ -47,7 +47,7 @@ def print_net_performance(epochs: int, epoch: int, J_train: float, J_val: float 
     print(print_performance)
 
 
-def train_loop(dataloader, model, loss_fn, optimizer, verbose = False):
+def train_loop_old(dataloader, model, loss_fn, optimizer, verbose = False):
     num_batches = len(dataloader)
     num_digits = len(str(num_batches))
 
@@ -77,7 +77,7 @@ def train_loop(dataloader, model, loss_fn, optimizer, verbose = False):
         print()
 
 
-def dev_loop(dataloader, model, loss_fn, verbose = False):
+def dev_loop_old(dataloader, model, loss_fn, verbose = False):
     num_batches = len(dataloader)
     test_loss = 0
 

@@ -6,7 +6,7 @@ from torch.utils.data import DataLoader
 
 from net_def import NeuralNetwork
 from net_data import AirfoilDataset
-from utils import set_learning_rate, train_loop, dev_loop, red, color_end
+from utils import set_learning_rate, train_loop_old, dev_loop_old, red, color_end
 
 
 ## Get the data
@@ -69,11 +69,11 @@ for epoch in range(total_epochs + 1, total_epochs + epochs + 1):
 
 
     # Run the training loop
-    train_loop(train_dataloader, xfoil_net, MSELoss_fn, optimizer, verbose = False)
+    train_loop_old(train_dataloader, xfoil_net, MSELoss_fn, optimizer, verbose = False)
 
 
     # Run the validation loop
-    J_val = dev_loop(dev_dataloader, xfoil_net, MSELoss_fn, verbose)
+    J_val = dev_loop_old(dev_dataloader, xfoil_net, MSELoss_fn, verbose)
     # scheduler.step(J_val)
 
 
