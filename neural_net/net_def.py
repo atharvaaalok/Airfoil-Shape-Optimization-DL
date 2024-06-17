@@ -32,7 +32,7 @@ class ResNet(nn.Module):
 
         self.input_layer = nn.Sequential(
             nn.Linear(input_dim, hidden_dim),
-            nn.Tanh(),
+            nn.ReLU(),
             nn.BatchNorm1d(hidden_dim)
         )
 
@@ -55,10 +55,10 @@ class ResidualBlock(nn.Module):
         super().__init__()
 
         self.linear1 = nn.Linear(hidden_dim, hidden_dim)
-        self.actf1 = nn.Tanh()
+        self.actf1 = nn.ReLU()
         self.bn1 = nn.BatchNorm1d(hidden_dim)
         self.linear2 = nn.Linear(hidden_dim, hidden_dim)
-        self.actf2 = nn.Tanh()
+        self.actf2 = nn.ReLU()
         self.bn2 = nn.BatchNorm1d(hidden_dim)
     
     def forward(self, x):
