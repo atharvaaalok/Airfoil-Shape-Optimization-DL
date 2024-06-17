@@ -16,8 +16,8 @@
   - [x] Decide H, M, L count depending on time taken and given that I am willing to spend D days on just data generation.
   - [x] Need for using parametric representation and smooth surface airfoil generation after adding noise.
   - [ ] TE and LE at (1, 0) and (0, 0) and setting angle of attack of generated airfoils to 0.
-- [ ] Work on neural network training pipeline.
-  - [ ] Get data from dataset using Dataset and Dataloader in pytorch.
+- [x] Work on neural network training pipeline.
+  - [x] Get data from dataset using Dataset and Dataloader in pytorch.
   - [x] Define Neural Network class.
   - [x] Define the hyperparameters.
   - [x] Complete the training loop.
