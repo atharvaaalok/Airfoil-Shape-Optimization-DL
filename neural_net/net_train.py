@@ -1,13 +1,12 @@
 import os.path
+import time
 
 import numpy as np
 import torch
 from torch import nn
-from torch.utils.data import DataLoader
 
-from net_def import NeuralNetwork
-from net_data import AirfoilDataset
-from utils import set_learning_rate, train_loop, dev_loop, red, cyan, color_end
+from net_def import NeuralNetwork, ResNet
+from utils import train_loop, dev_loop, red, cyan, color_end
 
 
 ## Get the data
@@ -17,16 +16,24 @@ dev_filepath = '../data/generated_airfoils/dev/airfoil_data.npz'
 data_train = np.load(train_filepath)
 data_dev = np.load(dev_filepath)
 
-X_train = torch.from_numpy(data_train['P']).to(torch.float32)
-Y_train = torch.from_numpy(data_train['L_by_D']).to(torch.float32).reshape(-1, 1)
-X_val = torch.from_numpy(data_dev['P']).to(torch.float32)
-Y_val = torch.from_numpy(data_dev['L_by_D']).to(torch.float32).reshape(-1, 1)
+
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+
+X_train = torch.from_numpy(data_train['P']).to(torch.float32).to(device)
+Y_train = torch.from_numpy(data_train['L_by_D']).to(torch.float32).reshape(-1, 1).to(device)
+X_val = torch.from_numpy(data_dev['P']).to(torch.float32).to(device)
+Y_val = torch.from_numpy(data_dev['L_by_D']).to(torch.float32).reshape(-1, 1).to(device)
 
 
 ## Initialize the network
 # Set network properties
 input_dim, hidden_dim, layer_count = 24, 30, 4
-xfoil_net = NeuralNetwork(input_dim, hidden_dim, layer_count)
+xfoil_net = NeuralNetwork(input_dim, hidden_dim, layer_count).to(device)
+
+
+# Make changes for running the computation faster
+xfoil_net = torch.compile(xfoil_net)
+torch.set_float32_matmul_precision('high')
 
 
 ## Define the loss function
@@ -37,14 +44,15 @@ MSELoss_fn = nn.MSELoss()
 learning_rate = 0.01
 weight_decay = 0
 optimizer = torch.optim.Adam(xfoil_net.parameters(), lr = learning_rate, weight_decay = weight_decay)
-# scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, factor = 0.99)
+scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, factor = 0.99)
+
 
 ## Train the network
 # Set the training properties
-epochs = 10000
-print_cost_every = 1000
-B_train = 900
-B_dev = 170
+epochs = 100000
+print_cost_every = 100
+B_train = X_train.shape[0]
+B_dev = X_val.shape[0]
 
 
 # Load saved model if available
@@ -65,7 +73,9 @@ for epoch in range(total_epochs + 1, total_epochs + epochs + 1):
 
     if verbose:
         print(f'{red}Epoch {epoch}{color_end}\n' + 40 * '-')
-        # print(scheduler.get_last_lr())
+        print(scheduler.get_last_lr())
+        t0 = time.perf_counter()
+        
     
 
     # Run the training loop
@@ -73,7 +83,14 @@ for epoch in range(total_epochs + 1, total_epochs + epochs + 1):
 
     # Run the validation loop
     J_val = dev_loop(X_val, Y_val, B_dev, xfoil_net, MSELoss_fn, verbose)
-    # scheduler.step(J_val)
+    scheduler.step(J_val)
+
+
+    if verbose:
+        torch.cuda.synchronize()
+        t1 = time.perf_counter()
+        dt = (t1 - t0) * 1000 # Time difference in milliseconds
+        print(f'Time taken: {dt}')
 
 
     if save:
@@ -89,28 +106,3 @@ for epoch in range(total_epochs + 1, total_epochs + epochs + 1):
 
 
 print('Finished Training!')
-
-
-# # Evaluate the model on training data
-# xfoil_net.train()
-# X, Y = X_train, Y_train
-# Y_pred = xfoil_net(X)
-# loss = MSELoss_fn(Y_pred, Y)
-# torch.set_printoptions(threshold = 10000, sci_mode = False)
-# print(torch.hstack([Y, Y_pred]))
-
-# # Evaluate the model on validation data
-# xfoil_net.eval()
-# X, Y = X_val, Y_val
-# Y_pred = xfoil_net(X)
-# loss = MSELoss_fn(Y_pred, Y)
-# torch.set_printoptions(threshold = 10000, sci_mode = False)
-# print(torch.hstack([Y, Y_pred]))
-
-# # Evaluate final training and validation loss
-# xfoil_net.train()
-# loss_train = MSELoss_fn(xfoil_net(X_train), Y_train)
-# xfoil_net.eval()
-# loss_val = MSELoss_fn(xfoil_net(X_val), Y_val)
-# print(f'Train Loss: {loss_train.item()}')
-# print(f'Valid Loss: {loss_val.item()}')
