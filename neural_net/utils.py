@@ -39,16 +39,20 @@ def train_loop(X_train, Y_train, B, model, loss_fn, optimizer, verbose = False):
     model.train()
 
     print_cost_every = 1 if num_batches // 5 == 0 else num_batches // 5
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
     # Run the training loop
     for batch in range(num_batches):
         X, Y = X_train[batch_indices[batch], :], Y_train[batch_indices[batch], :]
 
-        # Run the forward pass
-        Y_pred = model(X)
+        # Use BF16 for faster compute
+        with torch.autocast(device_type = device, dtype = torch.bfloat16):
+            # Run the forward pass
+            Y_pred = model(X)
 
-        # Compute the loss
-        loss = loss_fn(Y_pred, Y)
+            # Compute the loss
+            loss = loss_fn(Y_pred, Y)
+        
         train_loss += loss.item()
 
         # Run the backward pass and calculate the gradients
@@ -93,6 +97,7 @@ def dev_loop(X_val, Y_val, B, model, loss_fn, verbose = False):
 
     num_digits = len(str(num_batches))
     test_loss = 0
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
     # Set the model to evaluation mode
     model.eval()
@@ -102,11 +107,14 @@ def dev_loop(X_val, Y_val, B, model, loss_fn, verbose = False):
         for batch in range(num_batches):
             X, Y = X_val[batch_indices[batch], :], Y_val[batch_indices[batch], :]
 
-            # Run the forward pass
-            Y_pred = model(X)
+            # Use BF16 for faster compute
+            with torch.autocast(device_type = device, dtype = torch.bfloat16):
+                # Run the forward pass
+                Y_pred = model(X)
 
-            # Compute the loss
-            loss = loss_fn(Y_pred, Y)
+                # Compute the loss
+                loss = loss_fn(Y_pred, Y)
+
             test_loss += loss.item()
     
     test_loss = test_loss / num_batches
