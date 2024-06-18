@@ -6,6 +6,7 @@
 
 # Ignore pytorch model files
 *.pth
+!trained_nets/*.pth
 
 # Ignore log files
 *.log
