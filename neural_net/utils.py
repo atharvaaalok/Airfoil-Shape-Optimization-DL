@@ -11,7 +11,7 @@ blue = '\033[0;94m'
 
 
 
-def train_loop(X_train, Y_train, B, model, loss_fn, optimizer, verbose = False):
+def train_loop(X_train, Y_train, B, model, loss_fn, optimizer, verbose = False, compute_optimizations = True):
 
     N = X_train.shape[0]
     # Ensure B perfectly divides N
@@ -46,7 +46,14 @@ def train_loop(X_train, Y_train, B, model, loss_fn, optimizer, verbose = False):
         X, Y = X_train[batch_indices[batch], :], Y_train[batch_indices[batch], :]
 
         # Use BF16 for faster compute
-        with torch.autocast(device_type = device, dtype = torch.bfloat16):
+        if compute_optimizations == True:
+            with torch.autocast(device_type = device, dtype = torch.bfloat16):
+                # Run the forward pass
+                Y_pred = model(X)
+
+                # Compute the loss
+                loss = loss_fn(Y_pred, Y)
+        else:
             # Run the forward pass
             Y_pred = model(X)
 
@@ -75,7 +82,7 @@ def train_loop(X_train, Y_train, B, model, loss_fn, optimizer, verbose = False):
     return train_loss
 
 
-def dev_loop(X_val, Y_val, B, model, loss_fn, verbose = False):
+def dev_loop(X_val, Y_val, B, model, loss_fn, verbose = False, compute_optimizations = True):
     N = X_val.shape[0]
     # Ensure B perfectly divides N
     assert N % B == 0, "B should perfectly divide N"
@@ -108,7 +115,14 @@ def dev_loop(X_val, Y_val, B, model, loss_fn, verbose = False):
             X, Y = X_val[batch_indices[batch], :], Y_val[batch_indices[batch], :]
 
             # Use BF16 for faster compute
-            with torch.autocast(device_type = device, dtype = torch.bfloat16):
+            if compute_optimizations == True:
+                with torch.autocast(device_type = device, dtype = torch.bfloat16):
+                    # Run the forward pass
+                    Y_pred = model(X)
+
+                    # Compute the loss
+                    loss = loss_fn(Y_pred, Y)
+            else:
                 # Run the forward pass
                 Y_pred = model(X)
 
