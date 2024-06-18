@@ -11,8 +11,8 @@ from airfoil_utils import generate_airfoil_variants
 
 
 # Set the number of HV, MV and LV airfoils and the noise levels used to generate them
-HV_details = {'name': 'HV', 'count': 5, 'noise': 0.7}
-MV_details = {'name': 'MV', 'count': 5, 'noise': 0.3}
+HV_details = {'name': 'HV', 'count': 5, 'noise': 0.2}
+MV_details = {'name': 'MV', 'count': 5, 'noise': 0.15}
 LV_details = {'name': 'LV', 'count': 5, 'noise': 0.1}
 
 # Set parameterization details

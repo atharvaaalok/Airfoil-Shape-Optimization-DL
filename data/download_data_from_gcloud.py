@@ -30,5 +30,5 @@ def download_folder(bucket_name, destination_folder, dataset_subdir_name):
 # Download folder
 bucket_name = 'airfoil-shape-optimization-dl-data'
 destination_folder = 'downloaded_airfoils'
-dataset_subdir_name = 'HV0.7_MV0.3_LV0.1'
+dataset_subdir_name = 'HV0.2_MV0.15_LV0.1'
 download_folder(bucket_name, destination_folder, dataset_subdir_name)
