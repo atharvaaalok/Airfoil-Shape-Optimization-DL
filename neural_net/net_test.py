@@ -1,7 +1,9 @@
 import numpy as np
 import torch
 from torch import nn
-from net_def import NeuralNetwork, ResNet
+
+from trained_nets.Original_NoRegularization.net_load import xfoil_net
+from utils import red, color_end
 
 
 ## Get the data
@@ -26,12 +28,7 @@ Y_test = torch.from_numpy(data_test['L_by_D']).to(torch.float32).reshape(-1, 1).
 
 
 ## Initialize the network
-# Set network properties
-input_dim, hidden_dim, layer_count = 24, 30, 4
-xfoil_net = NeuralNetwork(input_dim, hidden_dim, layer_count).to(device)
-# Load saved model
-checkpoint = torch.load('checkpoints/latest.pth')
-xfoil_net.load_state_dict(checkpoint['model'])
+xfoil_net = xfoil_net.to(device)
 
 
 ## Define the loss function
@@ -42,19 +39,22 @@ MSELoss_fn = nn.MSELoss()
 xfoil_net.train()
 X, Y = X_train, Y_train
 Y_pred = xfoil_net(X)
-loss = MSELoss_fn(Y_pred, Y)
-print(f'Training Loss: {loss.item()}')
+loss_train = MSELoss_fn(Y_pred, Y).item()
 
 # Evaluate the model on validation data
 xfoil_net.eval()
 X, Y = X_val, Y_val
 Y_pred = xfoil_net(X)
-loss = MSELoss_fn(Y_pred, Y)
-print(f'Validation Loss: {loss.item()}')
+loss_val = MSELoss_fn(Y_pred, Y).item()
 
 # Evaluate the model on test data
 xfoil_net.eval()
 X, Y = X_test, Y_test
 Y_pred = xfoil_net(X)
-loss = MSELoss_fn(Y_pred, Y)
-print(f'Test Loss: {loss.item()}')
+loss_test = MSELoss_fn(Y_pred, Y).item()
+
+
+# Print the losses
+print(f'{red}Training Loss   :{color_end} {loss_train:10.6f}')
+print(f'{red}Validation Loss :{color_end} {loss_val:10.6f}')
+print(f'{red}Test Loss       :{color_end} {loss_test:10.6f}')
