@@ -47,7 +47,7 @@ MSELoss_fn = nn.MSELoss()
 
 ## Define an optimizer
 learning_rate = 0.01
-weight_decay = 0
+weight_decay = 1.5
 optimizer = torch.optim.Adam(xfoil_net.parameters(), lr = learning_rate, weight_decay = weight_decay)
 scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, factor = 0.99)
 

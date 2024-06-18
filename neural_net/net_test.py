@@ -2,7 +2,7 @@ import numpy as np
 import torch
 from torch import nn
 
-from trained_nets.Original_NoRegularization.net_load import xfoil_net
+from trained_nets.Original_Regularized.net_load import xfoil_net
 from utils import red, color_end
 
 
