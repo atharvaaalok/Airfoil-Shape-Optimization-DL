@@ -32,8 +32,13 @@ xfoil_net = NeuralNetwork(input_dim, hidden_dim, layer_count).to(device)
 
 
 # Make changes for running the computation faster
-xfoil_net = torch.compile(xfoil_net)
-torch.set_float32_matmul_precision('high')
+compute_optimizations = False
+if compute_optimizations == True:
+    try:
+        xfoil_net = torch.compile(xfoil_net)
+    except:
+        print('Could not compile the network.')
+    torch.set_float32_matmul_precision('high')
 
 
 ## Define the loss function
@@ -49,8 +54,8 @@ scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, factor = 0.99)
 
 ## Train the network
 # Set the training properties
-epochs = 100000
-print_cost_every = 100
+epochs = 1000000
+print_cost_every = 1000
 B_train = X_train.shape[0]
 B_dev = X_val.shape[0]
 
@@ -79,10 +84,10 @@ for epoch in range(total_epochs + 1, total_epochs + epochs + 1):
     
 
     # Run the training loop
-    J_train = train_loop(X_train, Y_train, B_train, xfoil_net, MSELoss_fn, optimizer, verbose = verbose)
+    J_train = train_loop(X_train, Y_train, B_train, xfoil_net, MSELoss_fn, optimizer, verbose = verbose, compute_optimizations = compute_optimizations)
 
     # Run the validation loop
-    J_val = dev_loop(X_val, Y_val, B_dev, xfoil_net, MSELoss_fn, verbose)
+    J_val = dev_loop(X_val, Y_val, B_dev, xfoil_net, MSELoss_fn, verbose, compute_optimizations = compute_optimizations)
     scheduler.step(J_val)
 
 
