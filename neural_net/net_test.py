@@ -2,14 +2,14 @@ import numpy as np
 import torch
 from torch import nn
 
-from trained_nets.Original_Regularized.net_load import xfoil_net
+from trained_nets.FullData_300nodes_10layers.net_load import xfoil_net
 from utils import red, color_end
 
 
 ## Get the data
-train_filepath = '../data/generated_airfoils/train/airfoil_data.npz'
-dev_filepath = '../data/generated_airfoils/dev/airfoil_data.npz'
-test_filepath = '../data/generated_airfoils/test/airfoil_data.npz'
+train_filepath = '../data/generated_airfoils/train/original.npz'
+dev_filepath = '../data/generated_airfoils/dev/original.npz'
+test_filepath = '../data/generated_airfoils/test/original.npz'
 
 
 data_train = np.load(train_filepath)
@@ -36,7 +36,7 @@ MSELoss_fn = nn.MSELoss()
 
 
 # Evaluate the model on training data
-xfoil_net.train()
+xfoil_net.eval()
 X, Y = X_train, Y_train
 Y_pred = xfoil_net(X)
 loss_train = MSELoss_fn(Y_pred, Y).item()

@@ -10,8 +10,8 @@ from utils import train_loop, dev_loop, red, cyan, color_end
 
 
 ## Get the data
-train_filepath = '../data/generated_airfoils/train/airfoil_data.npz'
-dev_filepath = '../data/generated_airfoils/dev/airfoil_data.npz'
+train_filepath = '../data/generated_airfoils/train/airfoil_data_filtered.npz'
+dev_filepath = '../data/generated_airfoils/dev/original.npz'
 
 data_train = np.load(train_filepath)
 data_dev = np.load(dev_filepath)
@@ -19,15 +19,16 @@ data_dev = np.load(dev_filepath)
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-X_train = torch.from_numpy(data_train['P']).to(torch.float32).to(device)
-Y_train = torch.from_numpy(data_train['L_by_D']).to(torch.float32).reshape(-1, 1).to(device)
+count = 1348100 * 100
+X_train = torch.from_numpy(data_train['P']).to(torch.float32)[:count].to(device)
+Y_train = torch.from_numpy(data_train['L_by_D']).to(torch.float32).reshape(-1, 1)[:count].to(device)
 X_val = torch.from_numpy(data_dev['P']).to(torch.float32).to(device)
 Y_val = torch.from_numpy(data_dev['L_by_D']).to(torch.float32).reshape(-1, 1).to(device)
 
 
 ## Initialize the network
 # Set network properties
-input_dim, hidden_dim, layer_count = 24, 30, 4
+input_dim, hidden_dim, layer_count = 24, 300, 10
 xfoil_net = NeuralNetwork(input_dim, hidden_dim, layer_count).to(device)
 
 
@@ -47,16 +48,16 @@ MSELoss_fn = nn.MSELoss()
 
 ## Define an optimizer
 learning_rate = 0.01
-weight_decay = 1.5
+weight_decay = 1e-4
 optimizer = torch.optim.Adam(xfoil_net.parameters(), lr = learning_rate, weight_decay = weight_decay)
 scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, factor = 0.99)
 
 
 ## Train the network
 # Set the training properties
-epochs = 1000000
-print_cost_every = 1000
-B_train = X_train.shape[0]
+epochs = 5000
+print_cost_every = 1
+B_train = X_train.shape[0] // 10
 B_dev = X_val.shape[0]
 
 
