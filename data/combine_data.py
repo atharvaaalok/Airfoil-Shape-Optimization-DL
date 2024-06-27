@@ -60,10 +60,10 @@ for dataset_count in dataset_count_list:
     P_combine.append(data['P'])
     L_by_D_combine.append(data['L_by_D'])
 
-    # 8. original_HV_MV_LV
-    data = np.load(dir_name + 'original_HV_MV_LV.npz')
-    P_combine.append(data['P'])
-    L_by_D_combine.append(data['L_by_D'])
+    # # 8. original_HV_MV_LV
+    # data = np.load(dir_name + 'original_HV_MV_LV.npz')
+    # P_combine.append(data['P'])
+    # L_by_D_combine.append(data['L_by_D'])
 
 
     # Stack all the data into a single array
