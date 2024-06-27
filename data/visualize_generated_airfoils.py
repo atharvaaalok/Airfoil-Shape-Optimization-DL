@@ -10,7 +10,7 @@ np.set_printoptions(linewidth = np.inf, precision = 3)
 
 # Load control points for the airfoils
 airfoil_set = 'train'
-filename = 'airfoil_data'
+filename = 'airfoil_data_filtered'
 data = np.load(f'generated_airfoils/{airfoil_set}/{filename}.npz')
 P_all = data['P']
 L_by_D_all = data['L_by_D']
@@ -23,8 +23,8 @@ L_by_D_all = L_by_D_all[idx]
 P_all = P_all[idx, :]
 
 # Print the nth largest and smallest airfoils L by D ratios
-n_largest = 5000
-n_smallest = 3000
+n_largest = 25000
+n_smallest = 25000
 print(f'L_by_D n ({n_largest}) largest: ', L_by_D_all[-n_largest])
 print(f'L_by_D n ({n_smallest}) smallest: ', L_by_D_all[n_smallest])
 
