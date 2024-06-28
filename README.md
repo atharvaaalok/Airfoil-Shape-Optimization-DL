@@ -33,7 +33,7 @@
 - [x] Generate actual data.
 - [x] Decide where to store the data.
 - [x] Train the neural network.
-- [ ] Run the two optimization processes.
+- [x] Run the two optimization processes.
 
 
 
