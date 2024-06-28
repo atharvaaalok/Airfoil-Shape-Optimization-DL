@@ -25,7 +25,7 @@
 - [x] Work on input optimization given the neural network.
   - [x] Fix L/D
   - [x] Change Loss function.
-- [ ] Work on getting the entire neural network pipeline working.
+- [x] Work on getting the entire neural network pipeline working.
 
 ### Move to Google Cloud Platform
 - [x] Move code to GCP. Connect to GCP via VSCode and SSH.
