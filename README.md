@@ -32,7 +32,7 @@
 - [x] Make sure all code works on GCP.
 - [x] Generate actual data.
 - [x] Decide where to store the data.
-- [ ] Train the neural network.
+- [x] Train the neural network.
 - [ ] Run the two optimization processes.
 
 
