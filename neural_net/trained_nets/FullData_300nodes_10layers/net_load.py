@@ -38,7 +38,8 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 current_dir = current_dir.replace('\\', '/')
 
 filename = current_dir + '/latest.pth'
-checkpoint = torch.load(filename)
+device = 'cpu'
+checkpoint = torch.load(filename, map_location = torch.device(device))
 xfoil_net.load_state_dict(checkpoint['model'])
 
 
