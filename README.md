@@ -23,6 +23,10 @@ We use a deep learning approach to solve the problem. The process consists of th
 Simply put, we learn the shape -> L/D mapping using a neural network and then run gradient descent on the shape input to design the airfoil.
 
 
+The animation below shows the optimization process for generating an airfoil with a specified L/D ratio of 75. NACA0006 is chosen as the initial airfoil which is iteratively modified using gradient descent to generate the final shape.
+<img src="assets/airfoil_optimization.gif" alt="GIF showing the airfoil optimization process." width="95%">
+
+
 Apart from the two main objectives discussed above, we can optimize designs for achieving other optimization objectives by simply changing the loss function. In that sense, the framework is really flexible.
 
 
